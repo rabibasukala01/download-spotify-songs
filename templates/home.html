@@ -1,14 +1,87 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/home.css'%}">
+
+    <title>Home</title>
 </head>
+
 <body>
-   <h1>this is main home</h1>
+
+
+
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="https://open.spotify.com/">spotify</a>
+        </li>
+
+        {% if authenticated %}
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Loged in as username</a>
+        </li>
+    </ul>
+
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'log_in' %}">Login</a>
+    </li>
+    {% endif %}
+    {% if authenticated %}
+    
+    <div class="container-md my-1">
+        Uniquely Yours
+        <div class="card" style="width: 11rem;">
+            <img src="static/images/logo.png" class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">Liked</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-md my-1">
+        <div class="row d-flex">
+            {% for i in a %}
+            
+            <div class="col-md-3 d-flex flex-column my-2">
+                <div class="card" style="width: 11rem;">
+                    <img src="static/images/logo.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <p class="card-text">Liked Songs</p>
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
+        </div>
+        
+    </div>
+    {% endif %}
+
+    
+    
+    
+    
+
+    
+    
+
+
+
+
+
+
 
 </body>
+
 </html>

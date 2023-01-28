@@ -30,7 +30,7 @@ def client_auth_url():
 
 def update_or_create_tokens(session_id, access_token, refresh_token, token_type, expires_in):
     # converting in actual time format
-    expires_in = timezone.now()+timedelta(seconds=expires_in)
+    expires_in = timezone.now() + timedelta(seconds=expires_in)
     # checking if already there is token or not
     user_token = SpotifyToken.objects.filter(user=session_id)
     if user_token.exists():

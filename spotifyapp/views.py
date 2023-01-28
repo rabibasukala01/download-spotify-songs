@@ -9,14 +9,24 @@ from spotify.settings import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
 
 
 # main home page
-
-
 def home(request):
 
+    if not is_user_authenticated(request.session.session_key):
+        context = {"authenticated": False,
+                   'a': [1, 3]
+                   }
+        return render(request, 'home.html', context)
+
+    context = {"authenticated": True,
+               'a': [1, 2, 3]
+               }
+    return render(request, 'home.html', context)
+
+
+def log_in(request):
+
     context = {
-
         "client_auth_url": client_auth_url(),
-
     }
 
     return render(request, 'login_page.html', context)
@@ -48,30 +58,14 @@ def callback(request):
     result = requests.post(
         'https://accounts.spotify.com/api/token', data=data, headers=header).json()
 
-    # print('\n\n')
-    # print(result)
-    # print(state)
-    # print('\n\n')
-    # print('\n\n')
+    access_token = result.get('access_token')
+    refresh_token = result.get('refresh_token')
+    expires_in = result.get('expires_in')
+    token_type = result.get('token_type')
 
-    # print(result['access_token'])
-    # print(result['token_type'])
-    # print(result['expires_in'])
-    # print(result['refresh_token'])
-    # print(result['scope'])
-
-    # print('\n\n')
-    # print(result.keys())
-
-    access_token = result['access_token']
-    refresh_token = result['refresh_token']
-    expires_in = result['expires_in']
-    token_type = result['token_type']
-
-    session_id = request.session.session_key
     if not request.session.exists(request.session.session_key):
         request.session.create()
-    update_or_create_tokens(session_id, access_token,
+    update_or_create_tokens(request.session.session_key, access_token,
                             refresh_token, token_type, expires_in)
 
     return redirect('home')
