@@ -1,0 +1,35 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+    <link rel="stylesheet" href="{%static 'css/login_page.css'%}">
+    <title>Spotify</title>
+</head>
+
+<body>
+    <div id="lion">
+        <div class="main">
+            <img src="static/images/logo.png" alt="logo" width="90rem">
+            <p> Spotify</p>
+        </div>
+        <div class="main">
+            <a href="{{client_auth_url}}">
+
+                <button class="but">
+                    LOGIN WITH SPOTIFY
+                </button>
+
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>

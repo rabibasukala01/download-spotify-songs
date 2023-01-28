@@ -1,0 +1,51 @@
+body {
+    background-color: #1e1e1e;
+    margin: 0;
+    padding: 0;
+}
+
+#lion {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 80vh;
+
+
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo_img {
+    height: 158px;
+}
+
+p {
+    margin-left: 1.2rem;
+    color: white;
+    font-size: 4.5rem;
+}
+
+.but {
+
+    background: #1ed760;
+    color: white;
+    border: none;
+    padding: 15px 15px;
+    border-radius: 20px;
+    font-weight: bolder;
+}
+
+.but:focus {
+    box-shadow: none;
+
+}
+
+.but:hover {
+    background: whitesmoke;
+    color: #1ed760;
+}

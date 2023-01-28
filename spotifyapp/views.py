@@ -19,7 +19,7 @@ def home(request):
 
     }
 
-    return render(request, 'home.html', context)
+    return render(request, 'login_page.html', context)
 
 
 # callback after login and generating  token  ig
