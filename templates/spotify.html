@@ -1,12 +1,49 @@
-<!DOCTYPE html>
+{% load static %}
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    spotify sec
-</body>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/spotify.css">
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="container-md">
+
+        <table class="table">
+            <colgroup>
+                <col style="width:10%">
+                <col style="width:35%">
+                <col style="width:35%">
+                <col style="width:10%">
+            </colgroup>
+
+
+            <tr style="background-color: green; color: white;font-size:12px">
+
+                <th>SN</th>
+                <th>Name</th>
+                <th>Artist</th>
+                <th><img src="images/clock-fill.svg" alt="icon"></th>
+                <th></th>
+
+            </tr>
+
+            <tr>
+
+                <td>1</td>
+                <td>pahilo maya</td>
+                <td>simple kharel</td>
+                <td>4.20</td>
+                <td><a href="#"><img  src="images/download.svg" alt="icon"></a></td>
+
+            </tr>
+        </table>
+        </div>
+
+  </body>
 </html>

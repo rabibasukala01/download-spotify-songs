@@ -27,7 +27,7 @@
 
         {% if authenticated %}
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Loged in as username</a>
+            <a class="nav-link active" aria-current="page" href="https://open.spotify.com/user/{{user_spotify_id}}">{{display_name}}ss</a>
         </li>
     </ul>
 
@@ -36,28 +36,30 @@
         <a class="nav-link active" aria-current="page" href="{% url 'log_in' %}">Login</a>
     </li>
     {% endif %}
+
     {% if authenticated %}
     
     <div class="container-md my-1">
         Uniquely Yours
-        <div class="card" style="width: 11rem;">
-            <img src="static/images/logo.png" class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-text">Liked</p>
+        
+            <div class="card" style="width: 11rem;">
+                <img src="static/images/logo.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                   <a href="#"> <p class="card-text">Liked</p></a>
+                </div>
             </div>
-        </div>
+       
     </div>
-
-
     <div class="container-md my-1">
         <div class="row d-flex">
-            {% for i in a %}
+            {% for playlist in playlists_info %}
             
             <div class="col-md-3 d-flex flex-column my-2">
                 <div class="card" style="width: 11rem;">
                     <img src="static/images/logo.png" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <p class="card-text">Liked Songs</p>
+                        <a href="{% url 'playlists' playlist.id %}"><p class="card-text">{{playlist.name}}</p></a>
+                        
                     </div>
                 </div>
             </div>
@@ -72,7 +74,9 @@
     
     
     
-
+{{playlist_imgs}}<br/>
+{{playlist_names}}
+{{playlist_ids}}
     
     
 

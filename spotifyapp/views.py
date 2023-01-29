@@ -1,14 +1,18 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 import requests
 import base64
 from .utlis import client_auth_url, download_audio, name_to_yt_video_id_generator, update_or_create_tokens, is_user_authenticated
-
+from .models import SpotifyToken
 from spotify.settings import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
 # send prepare url to frontend so that client can click
 
 
 # main home page
+def blank(request):
+    redirect('home')
+
+
 def home(request):
 
     if not is_user_authenticated(request.session.session_key):
@@ -17,8 +21,64 @@ def home(request):
                    }
         return render(request, 'home.html', context)
 
+    # extracting user info
+    obj = SpotifyToken.objects.get(user=request.session.session_key)
+    profile_url = 'https://api.spotify.com/v1/me'
+    headers = {
+        'Authorization': f'Bearer {obj.access_token}',
+        'Content-Type': 'application/json',
+    }
+
+    user_info = requests.get(profile_url, headers=headers).json()
+    # print(r.json())
+    display_name = user_info.get('display_name')
+    user_spotify_id = user_info.get('id')
+    user_spotify_pfp = user_info.get('images')[0]['url']
+    # print(user_spotify_pfp)
+    # print(display_name)
+
+    # extraction user playlists
+    parameters = {
+
+        'offset': 20,
+
+    }
+
+    playlist_imgs = []
+
+    playlist_url = f'https://api.spotify.com/v1/users/sx6tg6nghw29oisjtij33iky6/playlists'
+    playlist_response = requests.get(
+        playlist_url, headers=headers).json().get('items')
+
+    playlists_info = []
+
+    for playlist in playlist_response:
+
+        dic = {'name': playlist.get('name'),
+               'id': playlist.get('id')
+               }
+        playlists_info.append(dic)
+
+        # if playlist_imgs != None and len(playlist_imgs) > 1:
+        #     playlist_imgs.append(playlist.get('images')[0])
+
+    # print(playlist_info)
+    # get saved songs
+    # parameter = {
+    #     'offset': 20
+
+    # }
+    # saved_info = requests.get(
+    #     'https://api.spotify.com/v1/me/tracks', headers=headers, params=parameter).json()
+    # print(saved_info)
+
     context = {"authenticated": True,
-               'a': [1, 2, 3]
+               'display_name': display_name,
+               'user_spotify_id': user_spotify_id,
+               'user_spotify_pfp': user_spotify_pfp,
+               'playlists_info': playlists_info
+               #    'playlist_imgs': playlist_imgs
+
                }
     return render(request, 'home.html', context)
 
@@ -71,6 +131,11 @@ def callback(request):
     return redirect('home')
 
     # return render(request, 'spotify.html')
+
+
+def playlists(request, playlist_id):
+
+    return HttpResponse(f"{playlist_id} asdad")
 
 
 def ytdown(request):
