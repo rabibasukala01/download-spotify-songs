@@ -27,7 +27,7 @@
 
         {% if authenticated %}
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="https://open.spotify.com/user/{{user_spotify_id}}">{{display_name}}ss</a>
+            <a class="nav-link active" aria-current="page" href="https://open.spotify.com/user/{{user_spotify_id}}">{{display_name}}</a>
         </li>
     </ul>
 
@@ -45,7 +45,7 @@
             <div class="card" style="width: 11rem;">
                 <img src="static/images/logo.png" class="card-img-top" alt="...">
                 <div class="card-body">
-                   <a href="#"> <p class="card-text">Liked</p></a>
+                   <a href="{% url 'playlists' likedsongs %}"> <p class="card-text">Liked</p></a>
                 </div>
             </div>
        

@@ -5,25 +5,24 @@ import base64
 from .utlis import client_auth_url, download_audio, name_to_yt_video_id_generator, update_or_create_tokens, is_user_authenticated
 from .models import SpotifyToken
 from spotify.settings import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
-# send prepare url to frontend so that client can click
 
 
 # main home page
 def blank(request):
-    redirect('home')
+    redirect('log_in')
 
 
 def home(request):
 
     if not is_user_authenticated(request.session.session_key):
         context = {"authenticated": False,
-                   'a': [1, 3]
+
                    }
         return render(request, 'home.html', context)
 
     # extracting user info
-    obj = SpotifyToken.objects.get(user=request.session.session_key)
     profile_url = 'https://api.spotify.com/v1/me'
+    obj = SpotifyToken.objects.get(user=request.session.session_key)
     headers = {
         'Authorization': f'Bearer {obj.access_token}',
         'Content-Type': 'application/json',
@@ -41,12 +40,14 @@ def home(request):
     parameters = {
 
         'offset': 20,
+        'limit': 1,
 
     }
 
     playlist_imgs = []
 
-    playlist_url = f'https://api.spotify.com/v1/users/sx6tg6nghw29oisjtij33iky6/playlists'
+    # playlist_url = f'https://api.spotify.com/v1/users/sx6tg6nghw29oisjtij33iky6/playlists'
+    playlist_url = 'https://api.spotify.com/v1/me/playlists'
     playlist_response = requests.get(
         playlist_url, headers=headers).json().get('items')
 
@@ -63,21 +64,14 @@ def home(request):
         #     playlist_imgs.append(playlist.get('images')[0])
 
     # print(playlist_info)
-    # get saved songs
-    # parameter = {
-    #     'offset': 20
-
-    # }
-    # saved_info = requests.get(
-    #     'https://api.spotify.com/v1/me/tracks', headers=headers, params=parameter).json()
-    # print(saved_info)
 
     context = {"authenticated": True,
                'display_name': display_name,
                'user_spotify_id': user_spotify_id,
                'user_spotify_pfp': user_spotify_pfp,
-               'playlists_info': playlists_info
+               'playlists_info': playlists_info,
                #    'playlist_imgs': playlist_imgs
+               'likedsongs': 'likedsongs',
 
                }
     return render(request, 'home.html', context)
@@ -85,10 +79,10 @@ def home(request):
 
 def log_in(request):
 
+    # send prepare url to frontend so that client can click
     context = {
         "client_auth_url": client_auth_url(),
     }
-
     return render(request, 'login_page.html', context)
 
 
@@ -133,9 +127,56 @@ def callback(request):
     # return render(request, 'spotify.html')
 
 
-def playlists(request, playlist_id):
+def ms_to_min(ms):
+    sec = ms/1000
+    return round(int(sec)/60, 2)
 
-    return HttpResponse(f"{playlist_id} asdad")
+
+def playlists(request, playlist_id):
+    print(playlist_id)
+    songs_info = []
+    obj = SpotifyToken.objects.get(user=request.session.session_key)
+    headers = {
+        'Authorization': f'Bearer {obj.access_token}',
+        'Content-Type': 'application/json',
+    }
+
+    parameter = {
+        'limit': 3
+
+    }
+    if playlist_id == 'likedsongs':
+        # get saved songs/tracks
+        saved_info = requests.get(
+            'https://api.spotify.com/v1/me/tracks', headers=headers, params=parameter).json()
+
+        # print(saved_info)
+        # print(len(saved_info.get('items')))
+    else:
+        # for playlists tracks
+        saved_info = requests.get(
+            f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks', headers=headers, params=parameter).json()
+
+    songs = saved_info.get('items')
+    for song in songs:
+        song_variable = {
+
+            'added_at': song.get('added_at'),
+            'artists_url': song.get('track').get('artists')[
+                0].get('external_urls').get('spotify'),
+            'artists_name': song.get('track').get('artists')[0].get('name'),
+            # ms to min
+            'duration': ms_to_min(song.get('track').get('duration_ms')),
+            'song_name': song.get('track').get('name')
+
+        }
+        songs_info.append(song_variable)
+        # print(songs_info[0]['added_at'])
+    context = {
+        'songs_info': songs_info
+    }
+
+    return render(request, 'spotify.html', context)
 
 
 def ytdown(request):
