@@ -45,7 +45,7 @@
                 <td><a href="{{song.artists_url}}">{{song.artists_name}}</a></td>
                 <td>{{song.added_at}}</td>
                 <td>{{song.duration}}</td>
-                <td><i class="bi bi-arrow-down-circle"></i></td>
+                <td><a href="{% url 'download' song.song_name song.artists_name%}"><i class="bi bi-arrow-down-circle"></i></a></td>
 
             </tr>
             {% endfor %}

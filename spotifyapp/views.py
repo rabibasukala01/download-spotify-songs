@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 from django.shortcuts import render, redirect
 import requests
 import base64
@@ -9,16 +9,13 @@ from spotify.settings import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
 
 # main home page
 def blank(request):
-    redirect('log_in')
+    return redirect('log_in')
 
 
 def home(request):
 
     if not is_user_authenticated(request.session.session_key):
-        context = {"authenticated": False,
-
-                   }
-        return render(request, 'home.html', context)
+        return redirect('log_in')
 
     # extracting user info
     profile_url = 'https://api.spotify.com/v1/me'
@@ -36,7 +33,7 @@ def home(request):
     # print(user_spotify_pfp)
     # print(display_name)
 
-    # extraction user playlists
+    # extraction user playlists name and id
     parameters = {
 
         'offset': 20,
@@ -65,15 +62,15 @@ def home(request):
 
     # print(playlist_info)
 
-    context = {"authenticated": True,
-               'display_name': display_name,
-               'user_spotify_id': user_spotify_id,
-               'user_spotify_pfp': user_spotify_pfp,
-               'playlists_info': playlists_info,
-               #    'playlist_imgs': playlist_imgs
-               'likedsongs': 'likedsongs',
+    context = {
+        'display_name': display_name,
+        'user_spotify_id': user_spotify_id,
+        'user_spotify_pfp': user_spotify_pfp,
+        'playlists_info': playlists_info,
+        #    'playlist_imgs': playlist_imgs
+        'likedsongs': 'likedsongs',
 
-               }
+    }
     return render(request, 'home.html', context)
 
 
@@ -133,7 +130,7 @@ def ms_to_min(ms):
 
 
 def playlists(request, playlist_id):
-    print(playlist_id)
+    # print(playlist_id)
     songs_info = []
     obj = SpotifyToken.objects.get(user=request.session.session_key)
     headers = {
@@ -166,7 +163,7 @@ def playlists(request, playlist_id):
                 0].get('external_urls').get('spotify'),
             'artists_name': song.get('track').get('artists')[0].get('name'),
             # ms to min
-            'duration': ms_to_min(song.get('track').get('duration_ms')),
+            'duration': str(ms_to_min(song.get('track').get('duration_ms'))).split('T')[0],
             'song_name': song.get('track').get('name')
 
         }
@@ -179,16 +176,26 @@ def playlists(request, playlist_id):
     return render(request, 'spotify.html', context)
 
 
-def ytdown(request):
-    # video_id = 'b73BI9eUkjM'
-    audio_file = download_audio()
+def log_out(request):
+    obj = SpotifyToken.objects.get(user=request.session.session_key)
+    obj.delete()
+    return redirect('log_in')
+
+
+def download(request, name, artist):
+
+    video_id = name_to_yt_video_id_generator(f'{name}-{artist}')
+    # print(video_id)
+    audio_file = download_audio(video_id)
+
     # print(audio_file[0])
     # ------------------------------------------
-    response = HttpResponse(requests.get(
+
+    response = FileResponse(requests.get(
         audio_file[0]).content, content_type='audio/mp3')
     response['Content-Disposition'] = f'attachment; filename={audio_file[1]}.mp3'
     return response
 
     # TODO
-    # what if wee use fileResponse , io for performance but idk how to
+    # what if wee use fileResponse , io for performance? but idk how to
     # ------------------------------------------

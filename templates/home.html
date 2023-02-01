@@ -25,19 +25,18 @@
             <a class="nav-link active" aria-current="page" href="https://open.spotify.com/">spotify</a>
         </li>
 
-        {% if authenticated %}
+    
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="https://open.spotify.com/user/{{user_spotify_id}}">{{display_name}}</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'log_out'%}">LOgout</a>
+        </li>
     </ul>
 
-    {% else %}
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{% url 'log_in' %}">Login</a>
-    </li>
-    {% endif %}
+    
 
-    {% if authenticated %}
+   
     
     <div class="container-md my-1">
         Uniquely Yours
@@ -51,6 +50,7 @@
        
     </div>
     <div class="container-md my-1">
+        Playlists
         <div class="row d-flex">
             {% for playlist in playlists_info %}
             
@@ -68,7 +68,7 @@
         </div>
         
     </div>
-    {% endif %}
+    
 
     
     

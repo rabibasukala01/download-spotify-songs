@@ -110,7 +110,8 @@ def name_to_yt_video_id_generator(searchQuery):
     return videoID
 
 
-def download_audio(video_id='b73BI9eUkjM'):
+def download_audio(video_id):
+
     url = f"https://www.youtube.com/watch?v={video_id}"
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -125,13 +126,13 @@ def download_audio(video_id='b73BI9eUkjM'):
         info = ydl.extract_info(url, download=False)
         title = info.get('title', None)
         audio_url = info.get('url', None)
+    # print(info)
 
-        return audio_url, title
+    return audio_url, title
 
 
 if __name__ == '__main__':
     # for testing only
-    # video_id = name_to_yt_video_id_generator(
-    #     'Adele - Easy On Me ')
-
-    print(download_audio()[0])
+    video_id = name_to_yt_video_id_generator(
+        'Adele - Easy On Me ')
+    download_audio(video_id)
