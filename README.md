@@ -27,3 +27,6 @@ here : i ll be navigating to the one 'test for spotify api'
 ![image](https://user-images.githubusercontent.com/63946883/216515425-bc73d670-4265-4d10-96c0-45553ed45c51.png)
 
 the download button is clickable .It download the respective songs
+
+![image](https://user-images.githubusercontent.com/63946883/216515742-822afe66-243a-415b-9813-b804809b83db.png)
+
