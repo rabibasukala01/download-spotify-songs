@@ -126,7 +126,6 @@ def download_audio(video_id):
         info = ydl.extract_info(url, download=False)
         title = info.get('title', None)
         audio_url = info.get('url', None)
-    # print(info)
 
     return audio_url, title
 
