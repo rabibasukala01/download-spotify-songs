@@ -187,15 +187,7 @@ def download(request, name, artist):
     video_id = name_to_yt_video_id_generator(f'{name}-{artist}')
     # print(video_id)
     audio_file = download_audio(video_id)
-
-    # print(audio_file[0])
-    # ------------------------------------------
-
     response = FileResponse(requests.get(
-        audio_file[0]).content, content_type='audio/mp3')
+        audio_file[0], stream=True).raw, content_type='audio/mp3')
     response['Content-Disposition'] = f'attachment; filename={audio_file[1]}.mp3'
     return response
-
-    # TODO
-    # what if wee use fileResponse , io for performance? but idk how to
-    # ------------------------------------------
